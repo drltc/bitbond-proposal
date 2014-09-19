@@ -1,4 +1,4 @@
-
+e
 drltc's BitBTC gateway proposal
 
 September 13, 2014
@@ -148,4 +148,17 @@ altcoins that can be traded on a single chain.
 
 I understand that there were at one point plans for allowing cross-chain movement of BitAssets between BitShares Toolkit derived chains.
 I am not sure what the current state of those plans are, or whether anything has been implemented yet.
+
+Implementing expiration times
+-----------------------------
+
+I was surprised to discover that Bitcoin actually has no built-in way to make a transaction become *invalid* on a certain date!  However,
+it does have a way to make a transaction become *valid* on a certain date, called `nLockTime`.  We can "bootstrap" `nLockTime` into what
+we need by modifying the protocol as follows:
+
+- Bob includes the BTC inputs in the redacted delivery transaction.
+- Along with the redacted delivery transaction, Bob sends Alice a *signed* "deadline transaction," locked in the future, sending the same BTC inputs to Bob's own address.
+- If the deadline arrives and Bob hasn't delivered, Alice publishes the deadline transaction.
+- If the deadline transaction is confirmed, then the delivery transaction is provably never confirmable (since its inputs were already spent in the blockchain's confirmed state).
+- If Bob sends Alice the delivery transaction in a way that doesn't publicly disclose its contents, (i.e. by encrypting it with Alice's public key), Alice will have the power to voluntarily grant Bob a deadline extension by simply delaying when she publishes the deadline transaction.
 
